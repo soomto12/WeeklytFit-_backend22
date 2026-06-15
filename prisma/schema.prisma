@@ -1,0 +1,121 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           Int            @id @default(autoincrement())
+  email        String  @unique
+  name         String
+  password     String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  image        String?
+  aiResults    Ai_Result[]
+  profile      Profile[]
+  subscription Subscription[]
+  freeLimit  freeLimit[]
+  dailyLogs   dailyLogs[]
+}
+
+
+
+model dailyLogs {
+  id         Int       @id @default(autoincrement())
+  userId     Int
+  aiResultId Int       @unique
+  sunday     logStatus @default(pending)
+  monday     logStatus @default(pending)
+  tuesday    logStatus @default(pending)
+  wednesday  logStatus @default(pending)
+  thursday   logStatus @default(pending)
+  friday     logStatus @default(pending)
+  saturday   logStatus @default(pending)
+  user       User      @relation(fields: [userId], references: [id])
+  aiResult   Ai_Result @relation(fields: [aiResultId], references: [id])
+}
+
+model Profile {
+  id             Int       @id @default(autoincrement())
+  goal           String
+  userid         Int  @unique
+  dailyHours     String?
+  healthIssues   String?
+  ai_motivation  Boolean?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  age            String
+  difficultLevel String
+  height         String
+  weight         String
+
+  restDays       String[]
+  location       localtion @default(both)
+  user           User      @relation(fields: [userid], references: [id])
+}
+
+model Subscription {
+  id        Int      @id @default(autoincrement())
+  userId    Int  @unique
+  tier      tier?
+  status    SubscriptionStatus @default(active)
+  stripeSubscriptionId String @unique
+  stripeCustomerId String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Ai_Result {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  dailyPlans Json
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       User       @relation(fields: [userId], references: [id])
+  dailyLogs  dailyLogs?
+}
+model freeLimit {
+  id Int @id @default(autoincrement())
+  userId Int @unique
+  limitCount Int 
+  user User @relation(fields: [userId], references: [id])
+
+
+}
+
+enum localtion {
+  gym
+  homeWorkOut
+  both
+}
+
+enum difficultLevel {
+  beginner
+  intermidiate
+  expert
+}
+
+enum tier {
+  monthly
+  yearly
+  weekly
+}
+
+enum SubscriptionStatus {
+  active
+  past_due
+  cancelled
+}
+
+
+enum logStatus  {
+  done
+  unable
+ missed
+ pending
+}
