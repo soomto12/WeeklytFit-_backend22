@@ -1,4 +1,9 @@
 {
+  "scripts": {
+    "build": "prisma generate && tsc",
+    "start": "node dist/index.js",
+    "dev": "nodemon src/index.ts"
+  },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1053.0",
     "@google/genai": "^2.8.0",
