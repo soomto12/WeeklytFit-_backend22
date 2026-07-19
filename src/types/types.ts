@@ -41,6 +41,7 @@ export interface Exercise {
     sets: number
     reps: string | number
     rest: number
+    youtubeUrl?: string
 }
 
 export interface DayPlan {

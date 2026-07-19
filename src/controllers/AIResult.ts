@@ -7,6 +7,24 @@ const ai = new OpenAI({
     baseURL: "https://openrouter.ai/api/v1",
     apiKey: process.env.OPENROUTER_API_KEY,
 })
+
+const buildYoutubeSearchUrl = (exerciseName: string) =>
+    `https://www.youtube.com/results?search_query=${encodeURIComponent(`${exerciseName} exercise tutorial`)}`
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const attachExerciseVideoLinks = (weeklyPlans: any) => {
+    for (const day of Object.values(weeklyPlans ?? {})) {
+        const exercises = (day as any)?.exercises
+        if (Array.isArray(exercises)) {
+            for (const exercise of exercises) {
+                if (exercise?.name) {
+                    exercise.youtubeUrl = buildYoutubeSearchUrl(exercise.name)
+                }
+            }
+        }
+    }
+    return weeklyPlans
+}
 export const getAllAIResults = async (req: Request, res: Response) => {
     const userId = (req as AuthRequest).user.id
 
@@ -137,6 +155,8 @@ OUTPUT FORMAT (fill every field with real values):
             return
         }
 
+        attachExerciseVideoLinks(parsed)
+
         const updated = await prisma.ai_Result.update({
             where: { id: latest.id },
             data: { dailyPlans: parsed },
@@ -248,6 +268,8 @@ OUTPUT FORMAT (fill every field with real values):
             res.status(500).json({ message: "AI response was not valid JSON", raw: cleanText })
             return
         }
+
+        attachExerciseVideoLinks(parsed)
 
         const weeklyRoutine = await prisma.ai_Result.create({
             data: {
