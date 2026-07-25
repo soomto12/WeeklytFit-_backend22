@@ -21,8 +21,8 @@ const profileValidator = [
   body("difficultLevel")
     .notEmpty()
     .withMessage("difficultLevel is required")
-    .isIn(["beginner", "intermitiate", "expert"])
-    .withMessage("difficultLevel must be one of: beginner, intermitiate, expert"),
+    .isIn(["beginner", "intermidiate", "expert"])
+    .withMessage("difficultLevel must be one of: beginner, intermidiate, expert"),
   body("age")
     .notEmpty()
     .withMessage("age is required")
