@@ -65,7 +65,7 @@ OUTPUT FORMAT (fill with real values):
 // asks the AI for a plan and normalizes it into rows ready for prisma; returns null on bad output
 const generatePlan = async (profile: Profile) => {
     const result = await ai.chat.completions.create({
-        model: process.env.OPENROUTER_MODEL || "qwen/qwen3-30b-a3b-instruct-2507",
+        model: process.env.OPENROUTER_MODEL || "google/gemini-2.5-flash-lite",
         messages: [{ role: "user", content: buildPrompt(profile) }],
         response_format: { type: "json_object" },
         // a week's plan is ~2-4k tokens; without a cap OpenRouter reserves the model's full limit against credits
