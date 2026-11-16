@@ -1,0 +1,2 @@
+# Keep Prisma migration files byte-stable (their checksums are stored in the DB)
+*.sql text eol=lf
