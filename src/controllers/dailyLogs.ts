@@ -17,9 +17,20 @@ export const updateDailyLog = async (req: Request, res: Response) => {
     const { aiResultId, day, status } = req.body as { aiResultId: number; day: Day; status: string }
 
     try {
+        // make sure the plan exists and belongs to the logged-in user
+        const aiResult = await prisma.ai_Result.findFirst({
+            where: { id: Number(aiResultId), userId },
+            select: { id: true },
+        })
+
+        if (!aiResult) {
+            res.status(404).json({ message: "AI result not found" })
+            return
+        }
+
         const log = await prisma.dailyLogs.upsert({
-            where: { aiResultId: Number(aiResultId) },
-            create: { userId, aiResultId: Number(aiResultId), [day]: status },
+            where: { aiResultId: aiResult.id },
+            create: { userId, aiResultId: aiResult.id, [day]: status },
             update: { [day]: status },
         })
 
@@ -54,3 +65,6 @@ export const getUserDailyLogs = async (req: Request, res: Response) => {
         res.status(500).json({ message: "server error" })
     }
 }
+
+
+

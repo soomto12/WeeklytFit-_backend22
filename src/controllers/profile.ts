@@ -125,7 +125,7 @@ export const getProfile = async (req: Request, res: Response) => {
   const userId = (req as AuthRequest).user.id
 
   try {
-    const profile = await prisma.profile.findFirst({ where: { userid: userId } })
+    const profile = await prisma.profile.findUnique({ where: { userid: userId } })
 
     if (!profile) {
       return res.status(404).json({ message: "profile not found" })

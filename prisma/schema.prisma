@@ -36,7 +36,7 @@ model dailyLogs {
   friday     logStatus @default(pending)
   saturday   logStatus @default(pending)
   user       User      @relation(fields: [userId], references: [id])
-  aiResult   Ai_Result @relation(fields: [aiResultId], references: [id])
+  aiResult   Ai_Result @relation(fields: [aiResultId], references: [id], onDelete: Cascade)
 }
 
 model Profile {
@@ -73,11 +73,38 @@ model Subscription {
 model Ai_Result {
   id         Int      @id @default(autoincrement())
   userId     Int
-  dailyPlans Json
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   user       User       @relation(fields: [userId], references: [id])
   dailyLogs  dailyLogs?
+  exercises  Exercise[]
+  foods      Food[]
+}
+
+model Exercise {
+  id         Int       @id @default(autoincrement())
+  aiResultId Int
+  day        weekDay
+  name       String
+  sets       Int
+  reps       String
+  rest       Int
+  youtubeUrl String?
+  order      Int
+  aiResult   Ai_Result @relation(fields: [aiResultId], references: [id], onDelete: Cascade)
+
+  @@index([aiResultId, day])
+}
+
+model Food {
+  id         Int       @id @default(autoincrement())
+  aiResultId Int
+  day        weekDay
+  mealType   mealType
+  name       String
+  aiResult   Ai_Result @relation(fields: [aiResultId], references: [id], onDelete: Cascade)
+
+  @@index([aiResultId, day])
 }
 model freeLimit {
   id Int @id @default(autoincrement())
@@ -112,6 +139,22 @@ enum SubscriptionStatus {
   cancelled
 }
 
+
+enum weekDay {
+  sunday
+  monday
+  tuesday
+  wednesday
+  thursday
+  friday
+  saturday
+}
+
+enum mealType {
+  breakfast
+  lunch
+  dinner
+}
 
 enum logStatus  {
   done

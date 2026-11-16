@@ -1,16 +1,17 @@
 import dotenv from "dotenv"
 import path from "path"
-dotenv.config({ path: path.resolve(__dirname, "../.env") })
 import express from "express"
 import cors from "cors"
+// works both from the project root (dev) and from dist/ (prod)
+dotenv.config({ path: [path.resolve(__dirname, ".env"), path.resolve(__dirname, "../.env")] })
 import helmet from "helmet"
 import morgan from "morgan"
-import { userRoutes } from "./routes/user"
-import { aiResult } from "./routes/aiResult"
-import { dailyLogsRouter } from "./routes/dailyLogs"
-import {profileRoutes} from "./routes/profile"
-import { subcriptionRouter } from "./routes/subscription"
-import { webhookRouter } from "./routes/webhook"
+import { userRoutes } from "./src/routes/user"
+import { aiResult } from "./src/routes/aiResult"
+import { dailyLogsRouter } from "./src/routes/dailyLogs"
+import {profileRoutes} from "./src/routes/profile"
+import { subcriptionRouter } from "./src/routes/subscription"
+import { webhookRouter } from "./src/routes/webhook"
 import multer from "multer"
 import fs from "fs"
 const app = express()
@@ -41,7 +42,7 @@ const PORT = process.env.PORT || 3001
 
 app.use(helmet());
 app.use(cors({
-    origin: process.env.FRONTEND_URL || 'https://weeklyt-fit-frontend-bg56.vercel.app/login',
+    origin: process.env.FRONTEND_URL || 'https://weeklyt-fit-frontend-bg56.vercel.app',
     credentials: true
 }));
 

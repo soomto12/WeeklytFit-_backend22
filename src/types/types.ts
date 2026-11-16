@@ -36,40 +36,30 @@ export type tier = "monthly" | "yearly" | "weekly"
     tier: tier
  }
 
+export type WeekDay = "sunday" | "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday"
+
+export type MealType = "breakfast" | "lunch" | "dinner"
+
 export interface Exercise {
+    day: WeekDay
     name: string
     sets: number
-    reps: string | number
+    reps: string
     rest: number
     youtubeUrl?: string
+    order: number
 }
 
-export interface DayPlan {
-    day: string
-    focus: string
-    workoutType: string
-    duration: number
-    warmup: string[]
-    exercises: Exercise[]
-    meals: {
-        breakfast: string
-        lunch: string
-        dinner: string
-    }
-    motivation?: string
+export interface Food {
+    day: WeekDay
+    mealType: MealType
+    name: string
 }
 
 export interface AI_Result {
     userId: number | string
-    weeklyPlans: {
-        sunday: DayPlan
-        monday: DayPlan
-        tuesday: DayPlan
-        wednesday: DayPlan
-        thursday: DayPlan
-        friday: DayPlan
-        saturday: DayPlan
-    }
+    exercises: Exercise[]
+    foods: Food[]
 }
 
 

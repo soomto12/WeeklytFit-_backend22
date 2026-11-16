@@ -6,7 +6,7 @@ import {validationResult} from "express-validator"
 import { hash, compare } from "bcrypt-ts"
 import {prisma} from "../libs/prisma"
 import {createToken} from "../libs/utility"
-
+  
 // create new user
 export const registerUser = async (req: Request, res:Response)=>{
     const errors = validationResult(req);
@@ -17,9 +17,6 @@ if (!errors.isEmpty()) {
 
 const saltRound = 12;
     const { name, email, password } : User = req.body 
-
-   
-
     try {
       const findemail = await prisma.user.findUnique({
         where: { email }
@@ -38,11 +35,6 @@ const  createUser = await prisma.user.create({
     name: name
   }
 });
-
-
-    
-
-
 const token = createToken(createUser.id);
 const { password: _, ...safeUser } = createUser;
 res.status(200).json({message: "user created successfully", data: safeUser, token: token});
@@ -51,8 +43,6 @@ res.status(200).json({message: "user created successfully", data: safeUser, toke
         res.status(500).json({ message: "server error", error: error instanceof Error ? error.message : error })
         return
     }
-
-
 };
 
 
